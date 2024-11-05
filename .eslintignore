@@ -1,0 +1,21 @@
+dist
+.eslintrc.js
+.prettierrc.js
+node_modules
+k8s
+coverage
+package.json
+package-lock.json
+
+src/utils/**.ts
+src/app.ts
+src/server.ts
+
+src/jobs/**.ts
+
+src/middlewares/errorMiddleware.ts
+src/server.ts
+src/index.ts
+src/utils/**.ts
+src/utils/util.ts
+src/models_html/** */.ts

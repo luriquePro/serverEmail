@@ -1,0 +1,13 @@
+{
+	"editor.codeActionsOnSave": {
+		"source.fixAll.eslint": "explicit",
+		"source.fixAll.stylelint": "explicit",
+		"source.fixAll.tslint": "explicit",
+		"source.organizeImports": "explicit"
+	},
+	"editor.formatOnSave": true,
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"[snippets]": {
+		"editor.defaultFormatter": "vscode.json-language-features"
+	}
+}

@@ -1,0 +1,10 @@
+dist
+.eslintrc.js
+.prettierrc.js
+node_modules
+k8s
+coverage
+package.json
+package-lock.json
+
+src/utils/**.ts
