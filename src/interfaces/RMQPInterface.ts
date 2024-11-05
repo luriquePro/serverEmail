@@ -1,10 +1,17 @@
-export type Queues = "biblioteca_de_cursos" | "email_teste";
-export type Exchanges = "direct_biblioteca_de_cursos" | "direct_email_teste";
-export type RoutingKeys = "key_biblioteca_de_cursos" | "key_email_teste";
+import { QUEUE_STATUS } from "../constants/QUEUE.ts";
+
+export interface IQueueDTO {
+	id: string;
+	queue: string;
+	exchange: string;
+	routingKey: string;
+	status: QUEUE_STATUS;
+}
+
 export interface IRMQPConsumQueue {
-	queue: Queues;
-	exchange: Exchanges;
-	routingKey: RoutingKeys;
+	queue: string;
+	exchange: string;
+	routingKey: string;
 }
 
 export interface IRMQPDeclareExchange {

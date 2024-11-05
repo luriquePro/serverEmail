@@ -5,7 +5,9 @@ import mongoose from "mongoose";
 import path from "path";
 import { fileURLToPath } from "url";
 
+import { QUEUE_STATUS } from "./constants/QUEUE.ts";
 import { IRMQPConsumQueue, IRMQPDeclareExchange } from "./interfaces/RMQPInterface.ts";
+import { QueuesModel } from "./models/RMQP.ts";
 import { RMQPProvider } from "./providers/RMQPProvider.ts";
 
 class App {
@@ -13,28 +15,20 @@ class App {
 	public isProduction: boolean;
 	private __dirname: string;
 	private RMQPProvider: typeof RMQPProvider;
-	private queues: IRMQPConsumQueue[];
+	private queues: IRMQPConsumQueue[] = [];
 
 	public constructor() {
 		this.express = express();
 		this.isProduction = process.env.NODE_ENV === "production";
 		this.__dirname = path.dirname(fileURLToPath(import.meta.url));
 		this.RMQPProvider = RMQPProvider;
-		this.queues = [
-			{
-				queue: "biblioteca_de_cursos",
-				exchange: "direct_biblioteca_de_cursos",
-				routingKey: "key_biblioteca_de_cursos",
-			},
-			{
-				queue: "email_teste",
-				exchange: "direct_email_teste",
-				routingKey: "key_email_teste",
-			},
-		];
 
 		this.express.use("/assets", express.static(this.__dirname + "src/assets"));
 		this.database()
+			.then(async () => {
+				const rawQueues = await QueuesModel.find({ status: QUEUE_STATUS.ACTIVE }).lean();
+				this.queues = rawQueues.map(queue => ({ queue: queue.queue, exchange: queue.exchange, routingKey: queue.routingKey }));
+			})
 			.then(() => this.declareExchange(this.queues))
 			.then(() => this.consumeQueue(this.queues));
 	}

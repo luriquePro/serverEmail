@@ -1,0 +1,4 @@
+export enum QUEUE_STATUS {
+	ACTIVE = "ACTIVE",
+	INACTIVE = "INACTIVE",
+}
