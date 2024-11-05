@@ -8,6 +8,7 @@ import { fileURLToPath } from "url";
 import { QUEUE_STATUS } from "./constants/QUEUE.ts";
 import { IRMQPConsumQueue, IRMQPDeclareExchange } from "./interfaces/RMQPInterface.ts";
 import { QueuesModel } from "./models/RMQP.ts";
+import { MailerProvider } from "./providers/MailerProvider.ts";
 import { RMQPProvider } from "./providers/RMQPProvider.ts";
 
 class App {
@@ -16,12 +17,14 @@ class App {
 	private __dirname: string;
 	private RMQPProvider: typeof RMQPProvider;
 	private queues: IRMQPConsumQueue[] = [];
+	private MailerProvider: MailerProvider;
 
 	public constructor() {
 		this.express = express();
 		this.isProduction = process.env.NODE_ENV === "production";
 		this.__dirname = path.dirname(fileURLToPath(import.meta.url));
 		this.RMQPProvider = RMQPProvider;
+		this.MailerProvider = new MailerProvider();
 
 		this.express.use("/assets", express.static(this.__dirname + "src/assets"));
 		this.database()
@@ -38,7 +41,7 @@ class App {
 		mongoose
 			.connect(URL, { dbName: process.env.MONGODB_DATABASE })
 			.then(() => console.log(`MongoDB connected!`))
-			.catch(err => console.log("Error to connect mongoDB"));
+			.catch(() => console.log("Error to connect mongoDB"));
 	}
 
 	private async consumeQueue(consumeData: IRMQPConsumQueue[]) {
@@ -48,7 +51,7 @@ class App {
 		for (const { queue } of consumeData) {
 			await server.consume(queue, async (message: Message) => {
 				const content = JSON.parse(message.content.toString());
-				console.log(content);
+				await this.MailerProvider.sendMail({ to: content.to, code: content.code, code_template: content.code_template });
 			});
 		}
 	}

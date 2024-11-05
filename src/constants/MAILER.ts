@@ -1,0 +1,10 @@
+export enum CODE_MAILER {
+	CONFIRM_EMAIL = "US00UCE",
+}
+
+export const CODE_MAILER_ARRAY = ["US00UCE"];
+
+export enum MAILER_STATUS {
+	ACTIVE = "ACTIVE",
+	INACTIVE = "INACTIVE",
+}
