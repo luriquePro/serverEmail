@@ -1,13 +1,13 @@
 import { Document, Schema, model } from "mongoose";
-import { v4 } from "uuid";
+import { CheckAndGenerateUniqueId } from "../common/CheckAndGenerateUniqueId.ts";
 import { QUEUE_STATUS } from "../constants/QUEUE.ts";
 import { IQueueDTO } from "../interfaces/RMQPInterface.ts";
 
 export interface IQueuesMongo extends Partial<Omit<Document, "id">>, IQueueDTO {}
 
-const RMQPSchema = new Schema<IQueuesMongo>(
+const QueuesSchema = new Schema<IQueuesMongo>(
 	{
-		id: { type: String, default: v4(), required: true, trim: true, index: true, unique: true },
+		id: { type: String, required: true, trim: true, index: true, unique: true },
 		queue: { type: String, required: true, trim: true, index: true, unique: true },
 		exchange: { type: String, required: true, trim: true, index: true, unique: true },
 		routingKey: { type: String, required: true, trim: true, index: true, unique: true },
@@ -16,4 +16,9 @@ const RMQPSchema = new Schema<IQueuesMongo>(
 	{ timestamps: true },
 );
 
-export const QueuesModel = model<IQueuesMongo>("queues", RMQPSchema);
+QueuesSchema.pre("validate", async function (next) {
+	this.id = await CheckAndGenerateUniqueId(QueuesModel);
+	next();
+});
+
+export const QueuesModel = model<IQueuesMongo>("queues", QueuesSchema);

@@ -24,6 +24,7 @@ export interface ISendMailerCreateDTO {
 	text: string;
 	code?: string;
 	status: MAILER_STATUS;
+	mail_options: IMailerOptions;
 }
 
 export interface IMailerDTO {
@@ -37,4 +38,17 @@ export interface IMailerDTO {
 	text: string;
 	code?: string;
 	status: MAILER_STATUS;
+	mail_options: IMailerOptions;
+}
+
+export interface IMailerOptions {
+	accepted?: string[];
+	rejected?: string[];
+	envelope_time: number;
+	message_time: number;
+	message_size: number;
+	response: string;
+	message_id: string;
+	attempts: number;
+	provider_id: string;
 }

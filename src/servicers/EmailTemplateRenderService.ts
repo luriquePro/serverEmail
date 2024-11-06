@@ -5,7 +5,7 @@ const templater: Record<CODE_MAILER, [string, string, string]> = {
 };
 
 class EmailTemplateService {
-	getTemplate(code_template: CODE_MAILER, code?: string): { subject: string; template: string; sender: string } | null {
+	public static getTemplate(code_template: CODE_MAILER, code?: string): { subject: string; template: string; sender: string } | null {
 		const templateData = templater[code_template];
 		if (!templateData) return null;
 
